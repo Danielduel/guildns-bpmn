@@ -3498,6 +3498,21 @@ diagram-js@^7.8.2:
     path-intersection "^2.2.1"
     tiny-svg "^2.2.2"
 
+diagram-js@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/diagram-js/-/diagram-js-8.1.0.tgz#5deb6e149d3593e8e98c738c5a70be518befa3c6"
+  integrity sha512-65Fs/9GvNmpk5qhgU1Vv3F7kVKejYXuP5OiR7BvZz25hSj4dq9TGM8bp2vxmDt+Q+HpesNdD/TqtQRh4yWZbPQ==
+  dependencies:
+    css.escape "^1.5.1"
+    didi "^5.2.1"
+    hammerjs "^2.0.1"
+    inherits "^2.0.4"
+    min-dash "^3.5.2"
+    min-dom "^3.1.3"
+    object-refs "^0.3.0"
+    path-intersection "^2.2.1"
+    tiny-svg "^2.2.2"
+
 didi@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/didi/-/didi-5.2.1.tgz#1a0b1336be8baa0b068a72036eedd9fb94135bff"

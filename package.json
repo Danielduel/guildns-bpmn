@@ -13,6 +13,7 @@
     "@types/styled-components": "^5.1.21",
     "bpmn-js": "^8.9.1",
     "bpmn-js-embedded-comments": "^0.6.1",
+    "diagram-js": "^8.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",

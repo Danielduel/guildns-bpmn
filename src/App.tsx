@@ -6,6 +6,8 @@ import BpmnViewer from "bpmn-js/lib/Modeler";
 // import newDiagramUrl from "./mock/newDiagram.bpmn";
 import diagramUrl from "./mock/pizza-collaboration-2.bpmn";
 
+import "diagram-js/assets/diagram-js.css";
+
 const bpmnViewerCanvasId = "bpmnViewerCanvasId";
 const StyledCanvas = styled.div`
   width: 100vw;
