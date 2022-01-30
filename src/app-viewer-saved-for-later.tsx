@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
-import BpmnViewer from "bpmn-js/lib/Modeler";
+import BpmnViewer from "bpmn-js/lib/NavigatedViewer";
 // import EmbeddedComments from "bpmn-js-embedded-comments";
 // import diagramUrl from "./mock/pizza-collaboration-annotated.bpmn";
 // import newDiagramUrl from "./mock/newDiagram.bpmn";
