@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.e1ca91d5.css",
-    "main.js": "/static/js/main.cfae0ed9.js",
-    "static/js/787.5142e7ba.chunk.js": "/static/js/787.5142e7ba.chunk.js",
-    "static/media/bpmn.svg?68866489": "/static/media/bpmn.cfe117edcfdead8ecb8f.svg",
-    "static/media/bpmn.eot?68866489": "/static/media/bpmn.4d005733f9a667c4e6b9.eot",
-    "static/media/bpmn.ttf?26374340": "/static/media/bpmn.127b9cbf6fbf03a31da4.ttf",
-    "static/media/bpmn.woff?26374340": "/static/media/bpmn.a7ab98ab4861f196e64f.woff",
-    "static/media/bpmn.woff2?26374340": "/static/media/bpmn.34cd3c536889c5da8c74.woff2",
-    "static/media/bpmn-js-comments.eot?23532594": "/static/media/bpmn-js-comments.b7d1c21571467cda7336.eot",
-    "static/media/bpmn-js-comments.ttf?23532594": "/static/media/bpmn-js-comments.192ba11b031455be2b8d.ttf",
-    "static/media/bpmn-js-comments.woff?23532594": "/static/media/bpmn-js-comments.24e7d456784cb3747b0f.woff",
-    "static/media/bpmn-js-comments.svg?23532594": "/static/media/bpmn-js-comments.55a380b820dfda935b13.svg",
-    "static/media/newDiagram.bpmn": "/static/media/newDiagram.3359b040065791fdeee1.bpmn",
-    "index.html": "/index.html",
-    "main.e1ca91d5.css.map": "/static/css/main.e1ca91d5.css.map",
-    "main.cfae0ed9.js.map": "/static/js/main.cfae0ed9.js.map",
-    "787.5142e7ba.chunk.js.map": "/static/js/787.5142e7ba.chunk.js.map"
+    "main.css": "./static/css/main.419ed921.css",
+    "main.js": "./static/js/main.e55d1f15.js",
+    "static/js/787.5142e7ba.chunk.js": "./static/js/787.5142e7ba.chunk.js",
+    "static/media/bpmn.svg?68866489": "./static/media/bpmn.cfe117edcfdead8ecb8f.svg",
+    "static/media/bpmn.eot?68866489": "./static/media/bpmn.4d005733f9a667c4e6b9.eot",
+    "static/media/bpmn.ttf?26374340": "./static/media/bpmn.127b9cbf6fbf03a31da4.ttf",
+    "static/media/bpmn.woff?26374340": "./static/media/bpmn.a7ab98ab4861f196e64f.woff",
+    "static/media/bpmn.woff2?26374340": "./static/media/bpmn.34cd3c536889c5da8c74.woff2",
+    "static/media/bpmn-js-comments.eot?23532594": "./static/media/bpmn-js-comments.b7d1c21571467cda7336.eot",
+    "static/media/bpmn-js-comments.ttf?23532594": "./static/media/bpmn-js-comments.192ba11b031455be2b8d.ttf",
+    "static/media/bpmn-js-comments.woff?23532594": "./static/media/bpmn-js-comments.24e7d456784cb3747b0f.woff",
+    "static/media/bpmn-js-comments.svg?23532594": "./static/media/bpmn-js-comments.55a380b820dfda935b13.svg",
+    "static/media/newDiagram.bpmn": "./static/media/newDiagram.3359b040065791fdeee1.bpmn",
+    "index.html": "./index.html",
+    "main.419ed921.css.map": "./static/css/main.419ed921.css.map",
+    "main.e55d1f15.js.map": "./static/js/main.e55d1f15.js.map",
+    "787.5142e7ba.chunk.js.map": "./static/js/787.5142e7ba.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e1ca91d5.css",
-    "static/js/main.cfae0ed9.js"
+    "static/css/main.419ed921.css",
+    "static/js/main.e55d1f15.js"
   ]
 }
