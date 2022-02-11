@@ -1,4 +1,4 @@
-import React, {ReactChild, ReactChildren} from "react";
+import React, {ReactChild} from "react";
 import BpmnViewer from "bpmn-js/lib/Viewer";
 import BpmnModeler from "bpmn-js/lib/Modeler";
 import EmbeddedComments from "bpmn-js-embedded-comments";

@@ -1,11 +1,7 @@
 import React, {useContext} from 'react';
 import styled from "styled-components";
 /*
-import BpmnViewer from "bpmn-js/lib/Modeler";
-import EmbeddedComments from "bpmn-js-embedded-comments";
-import newDiagramUrl from "./mock/newDiagram.bpmn";
 */
-import diagramUrl from "./mock/pizza-collaboration-2.bpmn";
 import {DiagramMenu} from './DiagramMenu';
 import {AppContext} from './AppContext';
 
