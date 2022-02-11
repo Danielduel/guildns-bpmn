@@ -18,6 +18,10 @@ declare module "bpmn-js/lib/NavigatedViewer" {
   export default BPMNGeneric;
 }
 
+declare module "bpmn-js/lib/Viewer" {
+  export default BPMNGeneric;
+}
+
 declare module "bpmn-js/lib/BaseModeler" {
   export default BPMNGeneric;
 }

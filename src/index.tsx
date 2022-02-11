@@ -3,10 +3,30 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import qs from "query-string";
+
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css"
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css"
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css"
+import "bpmn-js/dist/assets/diagram-js.css"
+import "bpmn-js-embedded-comments/assets/comments.css";
+
+import {AppType, createAppContextProvider} from "./AppContext";
+
+type ParsedSearchType = {
+  applicationType: string
+};
+const parsedSearch = qs.parse(window.location.search) as unknown as ParsedSearchType;
+if (!parsedSearch.applicationType) parsedSearch.applicationType = "viewer";
+
+// TODO: validate AppType before passing it here
+const AppProvider = createAppContextProvider(parsedSearch.applicationType as AppType);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <AppProvider>
+      <App />
+    </AppProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

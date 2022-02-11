@@ -1,15 +1,13 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styled from "styled-components";
+/*
 import BpmnViewer from "bpmn-js/lib/Modeler";
-// import EmbeddedComments from "bpmn-js-embedded-comments";
-// import diagramUrl from "./mock/pizza-collaboration-annotated.bpmn";
-// import newDiagramUrl from "./mock/newDiagram.bpmn";
+import EmbeddedComments from "bpmn-js-embedded-comments";
+import newDiagramUrl from "./mock/newDiagram.bpmn";
+*/
 import diagramUrl from "./mock/pizza-collaboration-2.bpmn";
-
-import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css"
-import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css"
-import "bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css"
-import "bpmn-js/dist/assets/diagram-js.css"
+import {DiagramMenu} from './DiagramMenu';
+import {AppContext} from './AppContext';
 
 const bpmnViewerCanvasId = "bpmnViewerCanvasId";
 const StyledCanvas = styled.div`
@@ -21,31 +19,18 @@ const StyledCanvas = styled.div`
 `;
 
 function App() {
-  const canvasRef = React.useRef<HTMLDivElement>(null);  
-  
-  React.useEffect(() => {
-    if (canvasRef.current) {
-      // canvasRef.current.width = window.innerWidth;
-      // canvasRef.current.height = window.innerHeight;
+  const context = useContext(AppContext);
 
-      const viewer = new BpmnViewer({
-        container: `#${bpmnViewerCanvasId}`,
-//        additionalModules: [ EmbeddedComments ]
-      });
-      
-      fetch(diagramUrl as string)
-        .then(response => response.blob())
-        .then(blob => blob.text())
-        .then(diagram => {
-          console.log(diagram);
-          return viewer.importXML(diagram)
-        });
+  React.useEffect(() => {
+    if (context.viewer && context.newDiagramRaw) {
+      context.viewer?.importXML(context.newDiagramRaw);
     }
-  }, [canvasRef.current]);
+  }, [context.viewer, context.newDiagramRaw])
 
   return (
     <div className="App">
-      <StyledCanvas id="bpmnViewerCanvasId" ref={canvasRef}></StyledCanvas>
+      <DiagramMenu />
+      <StyledCanvas id={bpmnViewerCanvasId}></StyledCanvas>
     </div>
   );
 }
