@@ -48,7 +48,7 @@ function App() {
       })
 
 
-  }, [context.viewer, context.newDiagramRaw, context.storage])
+  }, [context.viewer, context.newDiagramRaw, context.storage, context.storageStatus])
 
   return (
     <div className="App">
