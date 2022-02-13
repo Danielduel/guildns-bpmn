@@ -9,9 +9,14 @@ type ImportXMLResult = {
   warnings: unknown;
 };
 
+type SaveXMLResult = {
+  xml: string;
+};
+
 class BPMNGeneric {
   constructor (opts: ConstructorOpts) {}
   importXML (fileContent: BPMNContent): Promise<ImportXMLResult>;
+  saveXML (): Promise<SaveXMLResult>;
 }
 
 declare module "bpmn-js/lib/NavigatedViewer" {
