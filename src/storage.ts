@@ -1,27 +1,80 @@
-export const createStorage = () => {
-  let grantedStyles = [
-    "color: #fff",
-    "background-color: #484",
-    "padding: 10px 10px",
-    "border-radius: 2px"
-  ].join(";");
-  const checkmarkEmoji = `\u2714`;
+import {openDB, DBSchema, IDBPDatabase} from "idb";
 
-  const megabyteSize = 1024 * 1024;
-  const desiredCapacity = 128 * megabyteSize;
-  const storage = new window.LargeLocalStorage({ size: desiredCapacity });
-  const storageStatus = {
-    initialized: false,
-    granted: false
+export type DiagramDataId = string;
+export type DiagramMetaId = string;
+type CreatedByUser<T> = {
+  id: T;
+  author: string;
+  timestamp: number;
+};
+
+export type DiagramData_v2 = CreatedByUser<DiagramDataId> & {
+  diagramMetaId: DiagramMetaId;
+  xmlData: string;
+};
+
+export type DiagramMeta_v2 = CreatedByUser<DiagramMetaId> & {
+  lastDiagramDataId: DiagramDataId;
+  diagramName: string;
+};
+
+export interface DiagramDB extends DBSchema {
+  diagramMeta_v2: {
+    key: DiagramMetaId;
+    value: DiagramMeta_v2;
   };
+  diagramData_v2: {
+    key: DiagramDataId;
+    value: DiagramData_v2;
+  };
+};
 
-  storage.initialized.then((_) => {
-    storageStatus.initialized = true;
-    const grantedCapacity = storage.getCapacity();
-    storageStatus.granted = !(grantedCapacity !== -1 && grantedCapacity !== desiredCapacity);
-    console.log(`%c${checkmarkEmoji} Got ${grantedCapacity / megabyteSize}MB for LLS`, grantedStyles);
+export type StorageType = IDBPDatabase<DiagramDB>;
+
+const upgrade = (db: IDBPDatabase<DiagramDB>) => {
+  // @ts-ignore
+  db.deleteObjectStore("diagramSave"); // v1 -> v2
+  // @ts-ignore
+  db.deleteObjectStore("diagramFile"); // v1 -> v2
+
+  db.createObjectStore("diagramMeta_v2", {
+    keyPath: "id"
   });
+  db.createObjectStore("diagramData_v2", {
+    keyPath: "id"
+  });
+};
 
-  return { storage, storageStatus };
+const createStorage = () => {
+  return openDB<DiagramDB>("diagramDb", 2, {
+    upgrade
+  });
+};
+
+export const storage = createStorage();
+type P<
+  MethodName extends keyof StorageType
+  > = Parameters<
+    StorageType[MethodName] extends (...args: any) => any
+    ? StorageType[MethodName]
+    : (...args: any) => any
+  >;
+
+export const storageApi = {
+  get: async function (...params: P<"get">) {
+    return (await storage).get(...params);
+  },
+  set: async function (...params: P<"put">) {
+    return (await storage).put(...params);
+  },
+  del: async function (...params: P<"delete">) {
+    return (await storage).delete(...params);
+  },
+  clear: async function (...params: P<"clear">) {
+    return (await storage).clear(...params);
+  },
+  keys: async function (...params: P<"getAllKeys">) {
+    return (await storage).getAllKeys(...params);
+  }
 };
 
