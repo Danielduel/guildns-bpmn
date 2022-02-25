@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import styled from "styled-components";
 import {DiagramMenu} from './DiagramMenu';
 import {AppContext} from './AppContext';
+import {Diagram, DiagramManager} from './managers/DiagramManager';
 
 const bpmnViewerCanvasId = "bpmnViewerCanvasId";
 const StyledCanvas = styled.div`
@@ -10,6 +11,7 @@ const StyledCanvas = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: -1;
 `;
 
 const StyledDebugButton = styled.div`
@@ -23,8 +25,37 @@ const StyledDebugButton = styled.div`
 `;
 
 function App() {
+  const author = "Test user";
+  const diagramName = "Test diagram";
   const context = useContext(AppContext);
+  const [diagramList, setDiagramList] = React.useState<Diagram[]>([]);
 
+  React.useLayoutEffect(() => {
+    DiagramManager
+      .list()
+      .then(list => setDiagramList(list));
+  }, [setDiagramList]);
+
+  return (
+    <div className="App">
+      <StyledCanvas id={bpmnViewerCanvasId}></StyledCanvas>
+      <DiagramMenu />
+      <div>
+        {diagramList.map(diagram => diagram.name)}
+      </div>
+      <div onClick={() => {
+        DiagramManager.create(author, diagramName)
+      }}>
+        New diagram
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+
+/*
   React.useEffect(() => {
     const isAppLoaded = (
       context.viewer &&
@@ -46,17 +77,6 @@ function App() {
           context.viewer?.importXML(diagram);
         }
       })
-
-
   }, [context.viewer, context.newDiagramRaw, context.storage, context.storageStatus])
+  */
 
-  return (
-    <div className="App">
-      <DiagramMenu />
-      <StyledDebugButton onClick={() => context.saveCurrentDiagram()} />
-      <StyledCanvas id={bpmnViewerCanvasId}></StyledCanvas>
-    </div>
-  );
-}
-
-export default App;

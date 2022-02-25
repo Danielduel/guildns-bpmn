@@ -1,11 +1,11 @@
-import {DiagramData_v2, DiagramMetaId, DiagramMeta_v2, storage, storageApi} from "../storage";
+import {DiagramData, DiagramMetaId, DiagramMeta, storage, storageApi} from "../storage";
 
-type DiagramMeta_v2_creatable = Omit<DiagramMeta_v2, "id" | "lastDiagramDataId">;
-type DiagramData_v2_creatable = Omit<DiagramData_v2, "id">;
+type DiagramMeta_creatable = Omit<DiagramMeta, "id" | "lastDiagramDataId">;
+type DiagramData_creatable = Omit<DiagramData, "id">;
 
-type Diagram = {
-  _diagramMeta: DiagramMeta_v2;
-  _diagramData: DiagramData_v2;
+export type Diagram = {
+  _diagramMeta: DiagramMeta;
+  _diagramData: DiagramData;
 
   name: string;
   author: string;
@@ -16,18 +16,19 @@ type Diagram = {
 };
 const isT = <T>(v: T | null | undefined): v is T => !!v;
 
-export class DiagramMetadataManager {
+export class DiagramManager {
   static async list() {
-    const metaKeys = await storageApi.keys("diagramMeta_v2");
-    const diagramsDirty = await Promise.all(metaKeys.map(DiagramMetadataManager.load));
+    const metaKeys = await storageApi.keys("diagramMeta");
+    const diagramsDirty = await Promise.all(metaKeys.map(DiagramManager.load));
     const diagrams = diagramsDirty.filter(isT);
     return diagrams;
   }
   static async load(metaId: DiagramMetaId) {
-    const meta = await storageApi.get("diagramMeta_v2", metaId) as DiagramMeta_v2; // | undefined;
+    const meta = await storageApi.get("diagramMeta", metaId) as DiagramMeta; // | undefined;
     if (!meta) return; // error?
+    if (!meta.lastDiagramDataId) return; // error?
 
-    const data = await storageApi.get("diagramData_v2", meta.lastDiagramDataId) as DiagramData_v2; // |  undefined;
+    const data = await storageApi.get("diagramData", meta.lastDiagramDataId) as DiagramData; // |  undefined;
     if (!data) return; // error?
 
     const result: Diagram = {
@@ -50,23 +51,25 @@ export class DiagramMetadataManager {
   }
   static async create(author: string, diagramName: string) {
     const timestamp = Date.now();
-    const meta: DiagramMeta_v2_creatable = {
+    const meta: DiagramMeta_creatable = {
       diagramName,
       timestamp,
-      author
+      author,
     };
-    const metaId = await storageApi.set("diagramMeta_v2", meta as DiagramMeta_v2);
-    const data: DiagramData_v2_creatable = {
+    const metaId = await storageApi.set("diagramMeta", meta as DiagramMeta);
+    const data: DiagramData_creatable = {
       author,
       timestamp,
       diagramMetaId: metaId,
       xmlData: ""
     };
-    const dataId = await storageApi.set("diagramData_v2", data as DiagramData_v2);
-    await storageApi.set("diagramMeta_v2", {
+    const dataId = await storageApi.set("diagramData", data as DiagramData);
+    console.log(metaId, dataId);
+    await storageApi.set("diagramMeta", {
       ...meta,
+      id: metaId,
       lastDiagramDataId: dataId
-    } as DiagramMeta_v2, metaId);
+    });
   }
 }
 
