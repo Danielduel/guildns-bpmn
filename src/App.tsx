@@ -11,7 +11,6 @@ const StyledCanvas = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: -1;
 `;
 
 const StyledDebugButton = styled.div`
@@ -25,58 +24,20 @@ const StyledDebugButton = styled.div`
 `;
 
 function App() {
-  const author = "Test user";
-  const diagramName = "Test diagram";
   const context = useContext(AppContext);
-  const [diagramList, setDiagramList] = React.useState<Diagram[]>([]);
+  const [diagramMenuOpen, setDiagramMenuOpen] = React.useState(true);
 
-  React.useLayoutEffect(() => {
-    DiagramManager
-      .list()
-      .then(list => setDiagramList(list));
-  }, [setDiagramList]);
+  const closeDiagramMenu = React.useCallback(() => {
+    setDiagramMenuOpen(false);
+  }, []);
 
   return (
     <div className="App">
       <StyledCanvas id={bpmnViewerCanvasId}></StyledCanvas>
-      <DiagramMenu />
-      <div>
-        {diagramList.map(diagram => diagram.name)}
-      </div>
-      <div onClick={() => {
-        DiagramManager.create(author, diagramName)
-      }}>
-        New diagram
-      </div>
+      {diagramMenuOpen && <DiagramMenu closeDiagramMenu={closeDiagramMenu} />}
     </div>
   );
 }
 
 export default App;
-
-
-/*
-  React.useEffect(() => {
-    const isAppLoaded = (
-      context.viewer &&
-      context.newDiagramRaw &&
-      context.storage.current &&
-      context.storageStatus.current
-    );
-    if (!isAppLoaded) return;
-    
-    context.storage.current?.getContents("Test diagram")
-      .then((data) => {
-        const diagram = data as string; // typings, hello?
-
-        if (!diagram) {
-          console.log("Loaded new diagram");
-          context.viewer?.importXML(context.newDiagramRaw)
-        } else {
-          console.log("Loaded saved diagram");
-          context.viewer?.importXML(diagram);
-        }
-      })
-  }, [context.viewer, context.newDiagramRaw, context.storage, context.storageStatus])
-  */
 

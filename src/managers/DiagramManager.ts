@@ -71,5 +71,12 @@ export class DiagramManager {
       lastDiagramDataId: dataId
     });
   }
+
+  static async delete(diagram: Diagram) {
+    return await Promise.all([
+      storageApi.del("diagramMeta", diagram._diagramMeta.id),
+      storageApi.del("diagramData", diagram._diagramData.id)
+    ]);
+  }
 }
 

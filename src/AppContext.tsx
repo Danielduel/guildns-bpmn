@@ -4,6 +4,7 @@ import BpmnModeler from "bpmn-js/lib/Modeler";
 import EmbeddedComments from "bpmn-js-embedded-comments";
 import {storage, DiagramDB} from "./storage";
 import newDiagramUrl from "./mock/newDiagram.bpmn";
+// import newDiagramUrl from "./mock/pizza-collaboration-annotated.bpmn";
 import {IDBPDatabase} from "idb";
 
 export type AppType = "modeler" | "viewer";
@@ -20,7 +21,7 @@ type AppContextProviderProps = {
 };
 
 export const createAppContextProvider = (appType: AppType) => {
-  const BpmnMainComponent = appType === "modeler" ? BpmnModeler : BpmnViewer;
+  const BpmnMainComponent = BpmnModeler; // appType === "viewer" ? BpmnViewer : BpmnModeler;
 
   const AppContextProvider = ({children}: AppContextProviderProps) => {
     const [viewer, setViewer] = React.useState<typeof defaultAppContext["viewer"]>(null);
@@ -35,7 +36,7 @@ export const createAppContextProvider = (appType: AppType) => {
 
     React.useEffect(() => {
       const _viewer = new BpmnMainComponent({
-        container: "body",
+        container: "#bpmnViewerCanvasId",
         additionalModules: [EmbeddedComments]
       });
       setViewer(_viewer);
