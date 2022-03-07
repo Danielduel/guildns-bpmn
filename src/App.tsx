@@ -1,8 +1,8 @@
-import React, {useContext} from 'react';
+import React, { useContext } from "react";
 import styled from "styled-components";
-import {DiagramMenu} from './DiagramMenu';
-import {AppContext} from './AppContext';
-import {Diagram, DiagramManager} from './managers/DiagramManager';
+import { DiagramMenu } from "./DiagramMenu";
+import { AppContext } from "./AppContext";
+import { Diagram, DiagramManager } from "./managers/DiagramManager";
 
 const bpmnViewerCanvasId = "bpmnViewerCanvasId";
 const StyledCanvas = styled.div`
@@ -24,20 +24,15 @@ const StyledDebugButton = styled.div`
 `;
 
 function App() {
-  const context = useContext(AppContext);
-  const [diagramMenuOpen, setDiagramMenuOpen] = React.useState(true);
-
-  const closeDiagramMenu = React.useCallback(() => {
-    setDiagramMenuOpen(false);
-  }, []);
+  const { saveCurrentDiagram, diagramMenuOpen } = useContext(AppContext);
 
   return (
     <div className="App">
       <StyledCanvas id={bpmnViewerCanvasId}></StyledCanvas>
-      {diagramMenuOpen && <DiagramMenu closeDiagramMenu={closeDiagramMenu} />}
+      {diagramMenuOpen && <DiagramMenu />}
+      <StyledDebugButton onClick={saveCurrentDiagram}></StyledDebugButton>
     </div>
   );
 }
 
 export default App;
-

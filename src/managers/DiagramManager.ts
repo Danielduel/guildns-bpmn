@@ -46,8 +46,29 @@ export class DiagramManager {
 
     return result;
   }
-  static async save() {
+  static async save(
+    metaId: DiagramMetaId,
+    diagramXml: string
+  ) {
+    const meta = await storageApi.get("diagramMeta", metaId) as DiagramMeta; // | undefined;
+    if (!meta) return; // error?
+    if (!meta.lastDiagramDataId) return; // error?
 
+    const author = meta.author;
+    const timestamp = Date.now();
+    const data: DiagramData_creatable = {
+      author,
+      timestamp,
+      diagramMetaId: metaId,
+      xmlData: diagramXml
+    };
+    const dataId = await storageApi.set("diagramData", data as DiagramData);
+    
+    await storageApi.set("diagramMeta", {
+      ...meta,
+      id: metaId,
+      lastDiagramDataId: dataId
+    }); 
   }
   static async create(author: string, diagramName: string) {
     const timestamp = Date.now();
