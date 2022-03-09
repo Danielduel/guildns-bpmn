@@ -2,10 +2,7 @@ import React, { ReactChild } from "react";
 import BpmnViewer from "bpmn-js/lib/Viewer";
 import BpmnModeler from "bpmn-js/lib/Modeler";
 import EmbeddedComments from "bpmn-js-embedded-comments";
-import { storage, DiagramDB } from "./storage";
 import newDiagramUrl from "./mock/newDiagram.bpmn";
-// import newDiagramUrl from "./mock/pizza-collaboration-annotated.bpmn";
-import { IDBPDatabase } from "idb";
 import { Diagram, DiagramManager } from "./managers/DiagramManager";
 
 export type AppType = "modeler" | "viewer";
@@ -15,10 +12,11 @@ const defaultAppContext = {
   viewer: null as BpmnViewer | null,
   currentDiagram: null as Diagram | null,
   newDiagramRaw: null as string | null,
-  openDiagram: (diagram: Diagram) => {},
+  openDiagram: (_diagram: Diagram) => {
+  },
   saveCurrentDiagram: () => {},
   diagramMenuOpen: true,
-  setDiagramMenuOpen: (() => {}) as SetState<boolean>
+  setDiagramMenuOpen: (() => {}) as SetState<boolean>,
 };
 
 export const AppContext = React.createContext(defaultAppContext);
@@ -79,8 +77,8 @@ export const createAppContextProvider = (appType: AppType) => {
       if (!diagramXml) return; // error?
       const metaId = currentDiagram._diagramMeta.id;
 
-      await DiagramManager.save(metaId, diagramXml.xml) 
-    }, [currentDiagram]);
+      await DiagramManager.save(metaId, diagramXml.xml);
+    }, [currentDiagram, viewer]);
 
     return (
       <AppContext.Provider
@@ -91,7 +89,7 @@ export const createAppContextProvider = (appType: AppType) => {
           saveCurrentDiagram,
           openDiagram,
           diagramMenuOpen,
-          setDiagramMenuOpen
+          setDiagramMenuOpen,
         }}
       >
         {children}

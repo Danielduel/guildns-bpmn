@@ -139,7 +139,6 @@ const WrapDiagramMenu = ({ children }: WithChildren) => (
 );
 
 const DiagramMenu = () => {
-  const context = React.useContext(AppContext);
   const [newDiagramModalOpen, setNewDiagramModalOpen] = React.useState(false);
   const [diagramList, setDiagramList] = React.useState<Diagram[]>([]);
 
@@ -147,7 +146,7 @@ const DiagramMenu = () => {
     DiagramManager.list().then((list) => setDiagramList(list));
   }, [setDiagramList]);
 
-  React.useLayoutEffect(updateList, []);
+  React.useLayoutEffect(updateList, [updateList]);
 
   if (newDiagramModalOpen) {
     return (

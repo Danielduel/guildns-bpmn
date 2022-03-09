@@ -1,4 +1,4 @@
-import {DiagramData, DiagramMetaId, DiagramMeta, storage, storageApi} from "../storage";
+import {DiagramData, DiagramMetaId, DiagramMeta, storageApi} from "../storage";
 
 type DiagramMeta_creatable = Omit<DiagramMeta, "id" | "lastDiagramDataId">;
 type DiagramData_creatable = Omit<DiagramData, "id">;

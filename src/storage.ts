@@ -1,4 +1,4 @@
-import {openDB, DBSchema, IDBPDatabase} from "idb";
+import { openDB, DBSchema, IDBPDatabase } from "idb";
 
 export type DiagramDataId = string;
 export type DiagramMetaId = string;
@@ -28,13 +28,14 @@ export interface DiagramDB extends DBSchema {
     key: DiagramDataId;
     value: DiagramData;
   };
-};
+}
 
 export type StorageType = IDBPDatabase<DiagramDB>;
 
 const upgrade = (db: IDBPDatabase<DiagramDB>) => {
-  // @ts-ignore - prevent name check
-  const deleteObjectStore = (name: string) => db.objectStoreNames.contains(name) && db.deleteObjectStore(name);
+  const deleteObjectStore = (name: string) =>
+    // @ts-ignore - prevent name check
+    db.objectStoreNames.contains(name) && db.deleteObjectStore(name);
 
   switch (db.version) {
     // @ts-ignore - prevent warn about fallthrough case
@@ -47,26 +48,24 @@ const upgrade = (db: IDBPDatabase<DiagramDB>) => {
       deleteObjectStore("diagramData_v2");
   }
 
-  const diagramMetaStore = db.createObjectStore("diagramMeta", {keyPath: "id", autoIncrement: true});
-  const diagramDataStore = db.createObjectStore("diagramData", {keyPath: "id", autoIncrement: true});
+  db.createObjectStore("diagramMeta", { keyPath: "id", autoIncrement: true });
+  db.createObjectStore("diagramData", { keyPath: "id", autoIncrement: true });
   // diagramDataStore.createIndex("diagramMetaId", "diagramMetaId");
   // diagramMetaStore.createIndex("lastDiagramDataId", "lastDiagramDataId");
 };
 
 const createStorage = () => {
   return openDB<DiagramDB>("diagramDb", 3, {
-    upgrade
+    upgrade,
   });
 };
 
 export const storage = createStorage();
-type P<
-  MethodName extends keyof StorageType
-  > = Parameters<
-    StorageType[MethodName] extends (...args: any) => any
+type P<MethodName extends keyof StorageType> = Parameters<
+  StorageType[MethodName] extends (...args: any) => any
     ? StorageType[MethodName]
     : (...args: any) => any
-  >;
+>;
 
 export const storageApi = {
   get: async function (...params: P<"get">) {
@@ -83,6 +82,5 @@ export const storageApi = {
   },
   keys: async function (...params: P<"getAllKeys">) {
     return (await storage).getAllKeys(...params);
-  }
+  },
 };
-

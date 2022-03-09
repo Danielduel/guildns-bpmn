@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { DiagramMenu } from "./DiagramMenu";
 import { AppContext } from "./AppContext";
-import { Diagram, DiagramManager } from "./managers/DiagramManager";
 
 const bpmnViewerCanvasId = "bpmnViewerCanvasId";
 const StyledCanvas = styled.div`
