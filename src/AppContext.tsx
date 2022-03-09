@@ -1,54 +1,53 @@
-import React, {ReactChild} from "react";
+import React, { ReactChild } from "react";
 import BpmnViewer from "bpmn-js/lib/Viewer";
 import BpmnModeler from "bpmn-js/lib/Modeler";
 import EmbeddedComments from "bpmn-js-embedded-comments";
-import {createStorage} from "./storage";
 import newDiagramUrl from "./mock/newDiagram.bpmn";
+import { Diagram, DiagramManager } from "./managers/DiagramManager";
 
 export type AppType = "modeler" | "viewer";
-export type StorageType = ReturnType<typeof createStorage>["storage"];
-export type StorageStatusType = ReturnType<typeof createStorage>["storageStatus"];
 
-const currentNull = { current: null };
+type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 const defaultAppContext = {
-  storage: currentNull as React.RefObject<null | StorageType>,
-  storageStatus: currentNull as React.RefObject<null | StorageStatusType>,
   viewer: null as BpmnViewer | null,
+  currentDiagram: null as Diagram | null,
   newDiagramRaw: null as string | null,
-  saveCurrentDiagram: () => {}
+  openDiagram: (_diagram: Diagram) => {
+  },
+  saveCurrentDiagram: () => {},
+  diagramMenuOpen: true,
+  setDiagramMenuOpen: (() => {}) as SetState<boolean>,
 };
 
 export const AppContext = React.createContext(defaultAppContext);
+export type AppContextType = typeof defaultAppContext;
 type AppContextProviderProps = {
   children: ReactChild;
 };
 
 export const createAppContextProvider = (appType: AppType) => {
-  const BpmnMainComponent = appType === "modeler" ? BpmnModeler : BpmnViewer;
+  const BpmnMainComponent = BpmnModeler; // appType === "viewer" ? BpmnViewer : BpmnModeler;
 
-  const AppContextProvider = ({children}: AppContextProviderProps) => {
-    const storage = React.useRef<null | StorageType>(null);
-    const storageStatus = React.useRef<null | StorageStatusType>(null);
-    const [viewer, setViewer] = React.useState<typeof defaultAppContext["viewer"]>(null);
-    const [newDiagramRaw, setNewDiagramRaw] = React.useState<typeof defaultAppContext["newDiagramRaw"]>(null);
-
-    React.useEffect(() => {
-      const {storage: _storage, storageStatus: _storageStatus} = createStorage();
-      storage.current = _storage;
-      storageStatus.current = _storageStatus;
-    }, []);
+  const AppContextProvider = ({ children }: AppContextProviderProps) => {
+    const [viewer, setViewer] =
+      React.useState<typeof defaultAppContext["viewer"]>(null);
+    const [currentDiagram, setCurrentDiagram] =
+      React.useState<typeof defaultAppContext["currentDiagram"]>(null);
+    const [newDiagramRaw, setNewDiagramRaw] =
+      React.useState<typeof defaultAppContext["newDiagramRaw"]>(null);
+    const [diagramMenuOpen, setDiagramMenuOpen] = React.useState(true);
 
     React.useEffect(() => {
       fetch(newDiagramUrl as string)
-        .then(res => res.blob())
-        .then(blob => blob.text())
+        .then((res) => res.blob())
+        .then((blob) => blob.text())
         .then(setNewDiagramRaw);
     }, [setNewDiagramRaw]);
 
     React.useEffect(() => {
       const _viewer = new BpmnMainComponent({
-        container: "body",
-        additionalModules: [EmbeddedComments]
+        container: "#bpmnViewerCanvasId",
+        additionalModules: [EmbeddedComments],
       });
       setViewer(_viewer);
       // Since this lib doesn't provide good typings
@@ -57,27 +56,46 @@ export const createAppContextProvider = (appType: AppType) => {
       // @ts-ignore
       window._viewer = _viewer;
     }, [setViewer]);
+    const openDiagram = React.useCallback(
+      (diagram: Diagram) => {
+        setCurrentDiagram(diagram);
 
-    const saveCurrentDiagram = React.useCallback(() => {
-      return viewer?.saveXML()
-        .then(({xml}) => {
-          storage.current?.setContents("Test diagram", xml);
-        });
-    }, [viewer, storage]);
+        if (diagram.xml) {
+          viewer?.importXML(diagram.xml);
+        } else {
+          viewer?.importXML(newDiagramRaw);
+        }
+
+        setDiagramMenuOpen(false);
+      },
+      [viewer, newDiagramRaw, setDiagramMenuOpen, setCurrentDiagram]
+    );
+
+    const saveCurrentDiagram = React.useCallback(async () => {
+      if (!currentDiagram) return; // error?
+      const diagramXml = await viewer?.saveXML();
+      if (!diagramXml) return; // error?
+      const metaId = currentDiagram._diagramMeta.id;
+
+      await DiagramManager.save(metaId, diagramXml.xml);
+    }, [currentDiagram, viewer]);
 
     return (
-        <AppContext.Provider value={{
-        storage,
-        storageStatus,
-        viewer,
-        newDiagramRaw,
-        saveCurrentDiagram
-      }}>
+      <AppContext.Provider
+        value={{
+          viewer,
+          currentDiagram,
+          newDiagramRaw,
+          saveCurrentDiagram,
+          openDiagram,
+          diagramMenuOpen,
+          setDiagramMenuOpen,
+        }}
+      >
         {children}
       </AppContext.Provider>
     );
   };
 
   return AppContextProvider;
-}
-
+};
